@@ -45,163 +45,167 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 // Complete the main function
 int main() {
-   while (1 > 0)
-   {
-        char record[ROW_SIZE];
-        FITNESS_DATA data[59];
-        char input;
+    char record[ROW_SIZE];
+    FITNESS_DATA data[59];
+    char input;
+
+    while (1 > 0)
+    {
         printf("Menu Options:\nA: Specify the filename to be imported\nB: Display the total number of records in the file\nC: Find the date and time of the timeslot with the fewest steps\nD: Find the date and time of the timeslot with the largest number of steps\nE: Find the mean step count of all the records in the file\nF: Find the longest continuous period where the step count is above 500 steps\nQ: Quit\nEnter choice: ");
         scanf(" %c", &input);
-        if (input = 81)
+
+        if (input == 81)
         {
             input = 71;
         }
-
-        switch (input - 64)
+        else
         {
-            case 1:
+            switch (input - 64)
             {
-                printf("Input filename: ");
-                scanf("%s", filename);
-
-                file = fopen(filename, "r");
-                if (file != NULL)
+                case 1:
                 {
+                    printf("Input filename: ");
+                    scanf("%s", filename);
+
+                    file = fopen(filename, "r");
+                    if (file != NULL)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        printf("Error: Could not find or open the file.");
+                    }
+                }
+                case 2:
+                {
+                    char record[ROW_SIZE];
+                    while(fgets(record, ROW_SIZE, file) != NULL)
+                    {
+                        ROW_COUNT++;
+                    }
+                    printf("Total records: %d\n", ROW_COUNT);
                     break;
                 }
-                else
+                case 3:
                 {
-                    printf("Error: Could not find or open the file.");
-                }
-            }
-            case 2:
-            {
-                char record[ROW_SIZE];
-                while(fgets(record, ROW_SIZE, file) != NULL)
-                {
-                    ROW_COUNT++;
-                }
-                printf("Total records: %d\n", ROW_COUNT);
-                break;
-            }
-            case 3:
-            {
-                int counter = 0;
-                char steps[10];
-                while(fgets(record, ROW_SIZE, file) != NULL)
-                {
-                    tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
-                    data[counter].steps = atoi(steps);
-                    counter++;
-                }
+                    int counter = 0;
+                    char steps[10];
+                    while(fgets(record, ROW_SIZE, file) != NULL)
+                    {
+                        tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
+                        data[counter].steps = atoi(steps);
+                        counter++;
+                    }
 
-                int low = 100;
-                for(int i = 0; i<59; i++)
-                {
-                    if (data[i].steps < low)
+                    int low = 100;
+                    for(int i = 0; i<counter; i++)
                     {
-                        low = data[i].steps;
-                    }
-                }
-                
-                for(int j = 0; j<59; j++)
-                {
-                    if (data[j].steps == low)
-                    {
-                        printf("%s/%s\n", data[j].date, data[j].time);
-                    }
-                }
-                break;
-            }
-            case 4:
-            {
-                int counter = 0;
-                char steps[10];
-                while(fgets(record, ROW_SIZE, file) != NULL)
-                {
-                    tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
-                    data[counter].steps = atoi(steps);
-                    counter++;
-                }
-
-                int high = 0;
-                for(int i = 0; i<59; i++)
-                {
-                    if (data[i].steps > high)
-                    {
-                        high = data[i].steps;
-                    }
-                }
-                
-                for(int j = 0; j<59; j++)
-                {
-                    if (data[j].steps == high)
-                    {
-                        printf("%s/%s\n", data[j].date, data[j].time);
-                    }
-                }
-                break;
-            }
-            case 5:
-            {
-                int counter = 0;
-                char steps[10];
-                while(fgets(record, ROW_SIZE, file) != NULL)
-                {
-                    tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
-                    data[counter].steps = atoi(steps);
-                    counter++;
-                }
-                int total = 0;
-                float mean = 0;
-                for(int i = 0; i<59; i++)
-                {
-                    total = data[i].steps + total;
-                }
-                mean = total / counter;
-                printf("%f\n", mean);
-                break;
-            }
-            case 6:
-            {
-                int counter = 0;
-                char steps[10];
-                while(fgets(record, ROW_SIZE, file) != NULL)
-                {
-                    tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
-                    data[counter].steps = atoi(steps);
-                    counter++;
-                }
-                int high = 0;
-                int count = 1;
-                for(int i=0; i<58; i++)
-                {
-                    if (data[i].steps > 500)
-                    {
-                        for(int j=i+1; j<59; j++)
+                        if (data[i].steps < low)
                         {
-                            if (data[j].steps > 500)
+                            low = data[i].steps;
+                        }
+                    }
+                    
+                    for(int j = 0; j<counter; j++)
+                    {
+                        if (data[j].steps == low)
+                        {
+                            printf("Fewest steps: %s %s\n", data[j].date, data[j].time);
+                        }
+                    }
+                    break;
+                }
+                case 4:
+                {
+                    int counter = 0;
+                    char steps[10];
+                    while(fgets(record, ROW_SIZE, file) != NULL)
+                    {
+                        tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
+                        data[counter].steps = atoi(steps);
+                        counter++;
+                    }
+
+                    int high = 0;
+                    for(int i = 0; i<59; i++)
+                    {
+                        if (data[i].steps > high)
+                        {
+                            high = data[i].steps;
+                        }
+                    }
+                    
+                    for(int j = 0; j<59; j++)
+                    {
+                        if (data[j].steps == high)
+                        {
+                            printf("%s/%s\n", data[j].date, data[j].time);
+                        }
+                    }
+                    break;
+                }
+                case 5:
+                {
+                    int counter = 0;
+                    char steps[10];
+                    while(fgets(record, ROW_SIZE, file) != NULL)
+                    {
+                        tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
+                        data[counter].steps = atoi(steps);
+                        counter++;
+                    }
+                    int total = 0;
+                    float mean = 0;
+                    for(int i = 0; i<59; i++)
+                    {
+                        total = data[i].steps + total;
+                    }
+                    mean = total / counter;
+                    printf("%f\n", mean);
+                    break;
+                }
+                case 6:
+                {
+                    int counter = 0;
+                    char steps[10];
+                    while(fgets(record, ROW_SIZE, file) != NULL)
+                    {
+                        tokeniseRecord(record, ",", data[counter].date, data[counter].time, steps);
+                        data[counter].steps = atoi(steps);
+                        counter++;
+                    }
+                    int high = 0;
+                    int count = 1;
+                    for(int i=0; i<58; i++)
+                    {
+                        if (data[i].steps > 500)
+                        {
+                            for(int j=i+1; j<59; j++)
                             {
-                                count++;
-                            }
-                            else
-                            {
-                                if (count > high)
+                                if (data[j].steps > 500)
                                 {
-                                    high = count;
+                                    count++;
                                 }
-                                count = 1;
-                                break;
+                                else
+                                {
+                                    if (count > high)
+                                    {
+                                        high = count;
+                                    }
+                                    count = 1;
+                                    break;
+                                }
                             }
                         }
                     }
+                    printf("%i\n", high);
+                    break;
                 }
-                printf("%i\n", high);
-                break;
-            }
-            case 7:
-            {
-                return 0;
+                case 7:
+                {
+                    return 0;
+                }
             }
         }
    }
